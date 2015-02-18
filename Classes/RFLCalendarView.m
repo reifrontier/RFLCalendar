@@ -18,7 +18,7 @@
 
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
-#import "CKCalendarView.h"
+#import "RFLCalendarView.h"
 
 #define BUTTON_MARGIN 4
 #define CALENDAR_MARGIN 5
@@ -68,7 +68,7 @@
 @interface DateButton : UIButton
 
 @property (nonatomic, strong) NSDate *date;
-@property (nonatomic, strong) CKDateItem *dateItem;
+@property (nonatomic, strong) RFLDateItem *dateItem;
 @property (nonatomic, strong) NSCalendar *calendar;
 
 @end
@@ -87,7 +87,7 @@
 
 @end
 
-@implementation CKDateItem
+@implementation RFLDateItem
 
 - (id)init {
     self = [super init];
@@ -102,7 +102,7 @@
 
 @end
 
-@interface CKCalendarView ()
+@interface RFLCalendarView ()
 
 @property(nonatomic, strong) UIView *highlight;
 @property(nonatomic, strong) UILabel *titleLabel;
@@ -121,7 +121,7 @@
 
 @end
 
-@implementation CKCalendarView
+@implementation RFLCalendarView
 
 @dynamic locale;
 
@@ -129,11 +129,11 @@
     return [self initWithStartDay:startSunday];
 }
 
-- (id)initWithStartDay:(CKCalendarStartDay)firstDay {
+- (id)initWithStartDay:(RFLCalendarStartDay)firstDay {
     return [self initWithStartDay:firstDay frame:CGRectMake(0, 0, 320, 320)];
 }
 
-- (void)_init:(CKCalendarStartDay)firstDay {
+- (void)_init:(RFLCalendarStartDay)firstDay {
     self.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     [self.calendar setLocale:[NSLocale currentLocale]];
 
@@ -218,11 +218,11 @@
     // initialize the thing
     self.monthShowing = [NSDate date];
     [self _setDefaultStyle];
-    
+
     [self layoutSubviews]; // TODO: this is a hack to get the first month to show properly
 }
 
-- (id)initWithStartDay:(CKCalendarStartDay)firstDay frame:(CGRect)frame {
+- (id)initWithStartDay:(RFLCalendarStartDay)firstDay frame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         [self _init:firstDay];
@@ -298,7 +298,7 @@
         DateButton *dateButton = [self.dateButtons objectAtIndex:dateButtonPosition];
 
         dateButton.date = date;
-        CKDateItem *item = [[CKDateItem alloc] init];
+        RFLDateItem *item = [[RFLDateItem alloc] init];
         if ([self _dateIsToday:dateButton.date]) {
             item.textColor = UIColorFromRGB(0xF2F2F2);
             item.backgroundColor = [UIColor lightGrayColor];
@@ -325,7 +325,7 @@
         date = [self _nextDay:date];
         dateButtonPosition++;
     }
-    
+
     if ([self.delegate respondsToSelector:@selector(calendar:didLayoutInRect:)]) {
         [self.delegate calendar:self didLayoutInRect:self.frame];
     }
@@ -347,7 +347,7 @@
     }
 }
 
-- (void)setCalendarStartDay:(CKCalendarStartDay)calendarStartDay {
+- (void)setCalendarStartDay:(RFLCalendarStartDay)calendarStartDay {
     _calendarStartDay = calendarStartDay;
     [self.calendar setFirstWeekday:self.calendarStartDay];
     [self _updateDayOfWeekLabels];
@@ -432,7 +432,7 @@
 - (CGRect)_calculateDayCellFrame:(NSDate *)date {
     NSInteger numberOfDaysSinceBeginningOfThisMonth = [self _numberOfDaysFromDate:self.monthShowing toDate:date];
     NSInteger row = (numberOfDaysSinceBeginningOfThisMonth + [self _placeInWeekForDate:self.monthShowing]) / 7;
-	
+
     NSInteger placeInWeek = [self _placeInWeekForDate:date];
 
     return CGRectMake(placeInWeek * (self.cellWidth + CELL_BORDER_WIDTH), (row * (self.cellWidth + CELL_BORDER_WIDTH)) + CGRectGetMaxY(self.daysHeader.frame) + CELL_BORDER_WIDTH, self.cellWidth, self.cellWidth);
@@ -501,8 +501,8 @@
 }
 
 - (void)setMonthButtonColor:(UIColor *)color {
-    [self.prevButton setImage:[CKCalendarView _imageNamed:@"left_arrow.png" withColor:color] forState:UIControlStateNormal];
-    [self.nextButton setImage:[CKCalendarView _imageNamed:@"right_arrow.png" withColor:color] forState:UIControlStateNormal];
+    [self.prevButton setImage:[RFLCalendarView _imageNamed:@"left_arrow.png" withColor:color] forState:UIControlStateNormal];
+    [self.nextButton setImage:[RFLCalendarView _imageNamed:@"right_arrow.png" withColor:color] forState:UIControlStateNormal];
 }
 
 - (void)setInnerBorderColor:(UIColor *)color {
