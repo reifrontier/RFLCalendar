@@ -1,10 +1,10 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "CKViewController.h"
-#import "CKCalendarView.h"
+#import "RFLCalendarView.h"
 
-@interface CKViewController () <CKCalendarDelegate>
+@interface CKViewController () <RFLCalendarDelegate>
 
-@property(nonatomic, weak) CKCalendarView *calendar;
+@property(nonatomic, weak) RFLCalendarView *calendar;
 @property(nonatomic, strong) UILabel *dateLabel;
 @property(nonatomic, strong) NSDateFormatter *dateFormatter;
 @property(nonatomic, strong) NSDate *minimumDate;
@@ -17,7 +17,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        CKCalendarView *calendar = [[CKCalendarView alloc] initWithStartDay:startMonday];
+        RFLCalendarView *calendar = [[RFLCalendarView alloc] initWithStartDay:startMonday];
         self.calendar = calendar;
         calendar.delegate = self;
 
@@ -31,7 +31,7 @@
                 [self.dateFormatter dateFromString:@"07/01/2013"]
         ];
 
-        calendar.onlyShowCurrentMonth = NO;
+
         calendar.adaptHeightToNumberOfWeeksInMonth = YES;
 
         calendar.frame = CGRectMake(10, 10, 300, 320);
@@ -86,25 +86,18 @@
 }
 
 #pragma mark -
-#pragma mark - CKCalendarDelegate
+#pragma mark - RFLCalendarDelegate
 
-- (void)calendar:(CKCalendarView *)calendar configureDateItem:(CKDateItem *)dateItem forDate:(NSDate *)date {
-    // TODO: play with the coloring if we want to...
-    if ([self dateIsDisabled:date]) {
-        dateItem.backgroundColor = [UIColor redColor];
-        dateItem.textColor = [UIColor whiteColor];
-    }
-}
 
-- (BOOL)calendar:(CKCalendarView *)calendar willSelectDate:(NSDate *)date {
+- (BOOL)calendar:(RFLCalendarView *)calendar willSelectDate:(NSDate *)date {
     return ![self dateIsDisabled:date];
 }
 
-- (void)calendar:(CKCalendarView *)calendar didSelectDate:(NSDate *)date {
+- (void)calendar:(RFLCalendarView *)calendar didSelectDate:(NSDate *)date {
     self.dateLabel.text = [self.dateFormatter stringFromDate:date];
 }
 
-- (BOOL)calendar:(CKCalendarView *)calendar willChangeToMonth:(NSDate *)date {
+- (BOOL)calendar:(RFLCalendarView *)calendar willChangeToMonth:(NSDate *)date {
     if ([date laterDate:self.minimumDate] == date) {
         self.calendar.backgroundColor = [UIColor blueColor];
         return YES;
@@ -114,7 +107,7 @@
     }
 }
 
-- (void)calendar:(CKCalendarView *)calendar didLayoutInRect:(CGRect)frame {
+- (void)calendar:(RFLCalendarView *)calendar didLayoutInRect:(CGRect)frame {
     NSLog(@"calendar layout: %@", NSStringFromCGRect(frame));
 }
 
