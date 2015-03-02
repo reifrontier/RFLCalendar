@@ -485,8 +485,8 @@
 }
 
 - (void)setButtonColor:(UIColor *)color {
-    [self.prevButton setImage:[RFLCalendarView imageNamed:@"left_arrow.png" withColor:color] forState:UIControlStateNormal];
-    [self.nextButton setImage:[RFLCalendarView imageNamed:@"right_arrow.png" withColor:color] forState:UIControlStateNormal];
+    [self.prevButton setImage:[RFLCalendarView imageNamed:@"RFLCalendar.bundle/images/left_arrow.png" withColor:color] forState:UIControlStateNormal];
+    [self.nextButton setImage:[RFLCalendarView imageNamed:@"RFLCalendar.bundle/images/right_arrow.png" withColor:color] forState:UIControlStateNormal];
 }
 
 - (void)setInnerBorderColor:(UIColor *)color {
