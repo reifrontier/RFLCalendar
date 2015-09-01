@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.homepage      =  "https://github.com/jaykz52/CKCalendar"
   s.license       =  { :type => 'MIT', :file => 'LICENSE.txt' }
   s.author        =  { "jaykz52" => "http://www.cozykozy.com" }
-  s.source        =  { :git => "https://github.com/shhommatsu/RFLCalendar.git", :tag => "0.0.8" }
+  s.source        =  { :git => "https://github.com/reifrontier/RFLCalendar.git", :tag => "0.0.8" }
   s.platform      =  :ios, '8.0'
   s.source_files  =  'Classes/*.{h,m}'
   s.resources     =  'Classes/RFLCalendar.bundle'
