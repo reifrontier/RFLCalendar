@@ -44,6 +44,9 @@ typedef int startDay;
 - (void)setTitleColor:(UIColor *)color;
 - (UIColor *)titleColor;
 
+- (void)setNextButtonHidden:(BOOL)hidden;
+- (void)setPrevButtonHidden:(BOOL)hidden;
+
 - (void)setButtonColor:(UIColor *)color;
 
 - (void)setInnerBorderColor:(UIColor *)color;
@@ -65,6 +68,13 @@ typedef int startDay;
 - (void)setDateBorderColor:(UIColor *)color;
 - (UIColor *)dateBorderColor;
 
+- (void)setDailyaaaDates:(NSArray *)dailyDates;
+
+- (void)setSubmitTextColor:(UIColor *)color;
+- (void)setNotSubmitTextColor:(UIColor *)color;
+
+- (BOOL)dateIsInCurrentMonth:(NSDate *)date;
+
 @property (nonatomic, strong) UIColor *dateTextColor;
 @property (nonatomic, strong) UIColor *selectedDateTextColor;
 @property (nonatomic, strong) UIColor *selectedDateBackgroundColor;
@@ -82,5 +92,6 @@ typedef int startDay;
 
 @optional
 - (void)calendar:(RFLCalendarView *)calendar didChangeMonth:(NSDate *)date;
+- (void)calendar:(RFLCalendarView *)calendar willShowMonth:(NSDate *)date;
 
 @end

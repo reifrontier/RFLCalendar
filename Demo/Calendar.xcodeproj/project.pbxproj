@@ -15,6 +15,14 @@
 		1D2391395A8710F3E85A68 /* CKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D2391395A8710F3E85A67 /* CKViewController.m */; };
 		1D2391395A8710F3E85A74 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D2391395A8710F3E85A73 /* QuartzCore.framework */; };
 		1D2391395A8710F3E85A76 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D2391395A8710F3E85A75 /* CoreGraphics.framework */; };
+		800005001B956BEE000E34C5 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 800004F91B956BEE000E34C5 /* FontAwesome.ttf */; };
+		800005011B956BEE000E34C5 /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 800004FA1B956BEE000E34C5 /* fontello.ttf */; };
+		800005021B956BEE000E34C5 /* NotoSansCJKjp-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 800004FB1B956BEE000E34C5 /* NotoSansCJKjp-Light.otf */; };
+		800005031B956BEE000E34C5 /* NotoSansCJKjp-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 800004FC1B956BEE000E34C5 /* NotoSansCJKjp-Thin.otf */; };
+		800005041B956BEE000E34C5 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 800004FD1B956BEE000E34C5 /* Roboto-Light.ttf */; };
+		800005051B956BEE000E34C5 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 800004FE1B956BEE000E34C5 /* Roboto-Regular.ttf */; };
+		800005061B956BEE000E34C5 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 800004FF1B956BEE000E34C5 /* Roboto-Thin.ttf */; };
+		800005081B956C7B000E34C5 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 800005071B956C7B000E34C5 /* Launch Screen.storyboard */; };
 		808B8D471A947C98006690C0 /* RFLCalendar.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 808B8D441A947C98006690C0 /* RFLCalendar.bundle */; };
 		808B8D481A947C98006690C0 /* RFLCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 808B8D461A947C98006690C0 /* RFLCalendarView.m */; };
 		80BF47231B047CE5009811E6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 80BF47221B047CE5009811E6 /* Default-568h@2x.png */; };
@@ -34,6 +42,14 @@
 		1D2391395A8710F3E85A67 /* CKViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CKViewController.m; sourceTree = "<group>"; };
 		1D2391395A8710F3E85A73 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1D2391395A8710F3E85A75 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		800004F91B956BEE000E34C5 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		800004FA1B956BEE000E34C5 /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = fontello.ttf; sourceTree = "<group>"; };
+		800004FB1B956BEE000E34C5 /* NotoSansCJKjp-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansCJKjp-Light.otf"; sourceTree = "<group>"; };
+		800004FC1B956BEE000E34C5 /* NotoSansCJKjp-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansCJKjp-Thin.otf"; sourceTree = "<group>"; };
+		800004FD1B956BEE000E34C5 /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Light.ttf"; sourceTree = "<group>"; };
+		800004FE1B956BEE000E34C5 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		800004FF1B956BEE000E34C5 /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
+		800005071B956C7B000E34C5 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		808B8D441A947C98006690C0 /* RFLCalendar.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = RFLCalendar.bundle; sourceTree = "<group>"; };
 		808B8D451A947C98006690C0 /* RFLCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFLCalendarView.h; sourceTree = "<group>"; };
 		808B8D461A947C98006690C0 /* RFLCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFLCalendarView.m; sourceTree = "<group>"; };
@@ -88,11 +104,13 @@
 		1D2391395A8710F3E85A5A /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
+				800004F81B956BEE000E34C5 /* resources */,
 				1D2391395A8710F3E85A67 /* CKViewController.m */,
 				1D2391395A8710F3E85A66 /* CKViewController.h */,
 				1D2391395A8710F3E85A64 /* CKAppDelegate.m */,
 				1D2391395A8710F3E85A63 /* CKAppDelegate.h */,
 				1D2391395A8710F3E85A5B /* Supporting Files */,
+				800005071B956C7B000E34C5 /* Launch Screen.storyboard */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -106,6 +124,20 @@
 				1D2391395A8710F3E85A5C /* Calendar-Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		800004F81B956BEE000E34C5 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				800004F91B956BEE000E34C5 /* FontAwesome.ttf */,
+				800004FA1B956BEE000E34C5 /* fontello.ttf */,
+				800004FB1B956BEE000E34C5 /* NotoSansCJKjp-Light.otf */,
+				800004FC1B956BEE000E34C5 /* NotoSansCJKjp-Thin.otf */,
+				800004FD1B956BEE000E34C5 /* Roboto-Light.ttf */,
+				800004FE1B956BEE000E34C5 /* Roboto-Regular.ttf */,
+				800004FF1B956BEE000E34C5 /* Roboto-Thin.ttf */,
+			);
+			path = resources;
 			sourceTree = "<group>";
 		};
 		808B8D431A947C98006690C0 /* Classes */ = {
@@ -171,7 +203,15 @@
 			files = (
 				808B8D471A947C98006690C0 /* RFLCalendar.bundle in Resources */,
 				1D2391395A8710F3E85A5F /* InfoPlist.strings in Resources */,
+				800005031B956BEE000E34C5 /* NotoSansCJKjp-Thin.otf in Resources */,
+				800005021B956BEE000E34C5 /* NotoSansCJKjp-Light.otf in Resources */,
 				80BF47231B047CE5009811E6 /* Default-568h@2x.png in Resources */,
+				800005011B956BEE000E34C5 /* fontello.ttf in Resources */,
+				800005081B956C7B000E34C5 /* Launch Screen.storyboard in Resources */,
+				800005051B956BEE000E34C5 /* Roboto-Regular.ttf in Resources */,
+				800005041B956BEE000E34C5 /* Roboto-Light.ttf in Resources */,
+				800005061B956BEE000E34C5 /* Roboto-Thin.ttf in Resources */,
+				800005001B956BEE000E34C5 /* FontAwesome.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

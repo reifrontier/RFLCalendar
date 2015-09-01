@@ -22,10 +22,13 @@
 
 #define BUTTON_MARGIN 4
 #define CALENDAR_MARGIN 1
-#define TOP_HEIGHT 93
-#define DAYS_HEADER_HEIGHT 22
+#define TOP_HEIGHT 70
+#define DAYS_HEADER_HEIGHT 40
 #define DEFAULT_CELL_WIDTH 90
 #define CELL_BORDER_WIDTH 1
+#define KEY_DATE @"date"
+#define KEY_SUBMIT @"submit"
+#define KEY_EXIST @"exist"
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
@@ -93,6 +96,7 @@
 @property(nonatomic, strong) UIButton *prevButton;
 @property(nonatomic, strong) UIButton *nextButton;
 @property(nonatomic, strong) UIView *calendarContainer;
+@property(nonatomic, strong) UIView *calendarContainerContainer;
 @property(nonatomic, strong) GradientView *daysHeader;
 @property(nonatomic, strong) NSArray *dayOfWeekLabels;
 @property(nonatomic, strong) NSMutableArray *dateButtons;
@@ -101,6 +105,12 @@
 @property (nonatomic, strong) NSDate *monthShowing;
 @property (nonatomic, strong) NSCalendar *calendar;
 @property(nonatomic, assign) CGFloat cellWidth;
+
+@property (nonatomic, strong) NSArray *dailyDates;
+@property (nonatomic, strong) UIColor *defaultTextColor;
+@property (nonatomic, strong) UIColor *submitColor;
+@property (nonatomic, strong) UIColor *noSubmitColor;
+@property (nonatomic, assign) BOOL hasAdd;
 
 @end
 
@@ -149,6 +159,7 @@
 }
 
 - (void)internalInit:(startDay)firstDay {
+    _hasAdd = NO;
     self.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     [self.calendar setLocale:[NSLocale currentLocale]];
     
@@ -184,6 +195,7 @@
     UIButton *prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [prevButton setImage:[UIImage imageNamed:@"RFLCalendar.bundle/images/left_arrow.png"]
                 forState:UIControlStateNormal];
+    
     prevButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     [prevButton addTarget:self action:@selector(moveCalendarToPreviousMonth) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:prevButton];
@@ -266,6 +278,18 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
+    if (!self.calendarContainerContainer) {
+        CGRect frame = self.calendarContainer.frame;
+        frame.origin.y = 0;
+        if (frame.size.height == 0) {
+            frame.size.height = 320;
+            frame.size.width = 320;
+        }
+        self.calendarContainerContainer = [[UIView alloc] initWithFrame:frame];
+        self.calendarContainerContainer.backgroundColor = [UIColor clearColor];
+        [self.calendarContainer addSubview:self.calendarContainerContainer];
+    }
+    
     CGFloat containerWidth = self.bounds.size.width - (CALENDAR_MARGIN * 2);
     self.cellWidth = (containerWidth / 7.0) - CELL_BORDER_WIDTH;
     
@@ -296,6 +320,7 @@
     }
     
     for (DateButton *dateButton in self.dateButtons) {
+        //dateButton.titleLabel.textColor = _dateTextColor;
         [dateButton removeFromSuperview];
     }
     
@@ -342,6 +367,15 @@
         
         date = [self nextDay:date];
         dateButtonPosition++;
+    }
+    
+    if (!_hasAdd) {
+        if (_dailyDates) {
+            _hasAdd = YES;
+            for (DateButton *dateButton in self.dateButtons) {
+                [self hasDailyDate:dateButton];
+            }
+        }
     }
 }
 
@@ -441,6 +475,12 @@
     NSDateComponents* comps = [[NSDateComponents alloc] init];
     [comps setMonth:1];
     self.monthShowing = [self.calendar dateByAddingComponents:comps toDate:self.monthShowing options:0];
+    _hasAdd = NO;
+    [self.calendarContainerContainer removeFromSuperview];
+    self.calendarContainerContainer = nil;
+    for (DateButton *dateButton in self.dateButtons) {
+        dateButton.titleLabel.textColor = _dateTextColor;
+    }
     if ( [self.delegate respondsToSelector:@selector(calendar:didChangeMonth:)] ) {
         [self.delegate calendar:self didChangeMonth:self.monthShowing];
     }
@@ -450,6 +490,12 @@
     NSDateComponents* comps = [[NSDateComponents alloc] init];
     [comps setMonth:-1];
     self.monthShowing = [self.calendar dateByAddingComponents:comps toDate:self.monthShowing options:0];
+    _hasAdd = NO;
+    [self.calendarContainerContainer removeFromSuperview];
+    self.calendarContainerContainer = nil;
+    for (DateButton *dateButton in self.dateButtons) {
+        dateButton.titleLabel.textColor = _dateTextColor;
+    }
     if ( [self.delegate respondsToSelector:@selector(calendar:didChangeMonth:)] ) {
         [self.delegate calendar:self didChangeMonth:self.monthShowing];
     }
@@ -468,7 +514,67 @@
     }
 }
 
+- (void)hasDailyDate:(DateButton *)dateButton
+{
+    if (dateButton.date) {
+        NSString *theDay = [self dateStringFromDate:[dateButton date]];
+        for (NSDictionary *dict in _dailyDates) {
+            NSString *dailyDate = dict[KEY_DATE];
+            BOOL submit = [dict[KEY_SUBMIT] boolValue];
+            BOOL exist = [dict[KEY_EXIST] boolValue];
+            CGRect frame = dateButton.frame;
+            frame.size.width = frame.size.width - 10;
+            frame.size.height = frame.size.height - 10;
+            frame.origin.x = frame.origin.x + 5;
+            frame.origin.y = frame.origin.y + 5;
+            UIView *view = [[UIView alloc] initWithFrame:frame];
+            view.backgroundColor = [UIColor clearColor];
+            view.layer.cornerRadius = frame.size.width / 2;
+            if ([dailyDate isEqualToString:theDay]) {
+                
+                if (!exist) {
+                    dateButton.titleLabel.textColor = [UIColor darkGrayColor];
+                    CGFloat viewHeight = view.frame.size.height;
+                    CAShapeLayer *shapelayer = [CAShapeLayer layer];
+                    UIBezierPath *path = [UIBezierPath bezierPath];
+                    [path addArcWithCenter:CGPointMake(viewHeight*0.5f, viewHeight*0.5f)
+                                    radius:viewHeight / 2
+                                startAngle:0
+                                  endAngle:2 * M_PI
+                                 clockwise:YES];
+                    UIColor *fill = [UIColor clearColor];
+                    shapelayer.strokeStart = 0.0;
+                    shapelayer.fillColor = fill.CGColor;
+                    shapelayer.strokeColor = [UIColor darkGrayColor].CGColor;
+                    shapelayer.lineWidth = 2.0;
+                    shapelayer.lineJoin = kCALineJoinRound;
+                    shapelayer.lineDashPattern = @[@5,@5];
+                    shapelayer.path = path.CGPath;
+                    [view.layer addSublayer:shapelayer];
+                    view.backgroundColor = [UIColor clearColor];
+                } else {
+                    if (submit) {
+                        view.backgroundColor = _submitColor;
+                    } else {
+                        view.backgroundColor = _noSubmitColor;
+                    }
+                }
+                
+                [self.calendarContainerContainer addSubview:view];
+                
+            }
+            
+        }
+    }
+    
+}
+
 #pragma mark - Theming getters/setters
+- (void)setDailyaaaDates:(NSArray *)dailyDates
+{
+    _dailyDates = dailyDates;
+    [self layoutSubviews];
+}
 
 - (void)setTitleFont:(UIFont *)font {
     self.titleLabel.font = font;
@@ -482,6 +588,16 @@
 }
 - (UIColor *)titleColor {
     return self.titleLabel.textColor;
+}
+
+- (void)setNextButtonHidden:(BOOL)hidden
+{
+    [self.nextButton setHidden:hidden];
+}
+
+- (void)setPrevButtonHidden:(BOOL)hidden
+{
+    [self.prevButton setHidden:hidden];
 }
 
 - (void)setButtonColor:(UIColor *)color {
@@ -550,6 +666,16 @@
     return self.calendarContainer.backgroundColor;
 }
 
+- (void)setSubmitTextColor:(UIColor *)color
+{
+    _submitColor = color;
+}
+
+- (void)setNotSubmitTextColor:(UIColor *)color
+{
+    _noSubmitColor = color;
+}
+
 #pragma mark - Calendar helpers
 
 - (NSDate *)firstDayOfMonthContainingDate:(NSDate *)date {
@@ -563,6 +689,11 @@
     comps.day = 1;
     comps.month = comps.month + 1;
     return [self.calendar dateFromComponents:comps];
+}
+
+
+- (BOOL)dateIsInCurrentMonth:(NSDate *)date {
+    return ([self compareByMonth:date toDate:self.monthShowing] == NSOrderedSame);
 }
 
 - (NSComparisonResult)compareByMonth:(NSDate *)date toDate:(NSDate *)otherDate {
@@ -613,7 +744,7 @@
 }
 
 - (NSInteger)numberOfWeeksInMonthContainingDate:(NSDate *)date {
-    return [self.calendar rangeOfUnit:NSCalendarUnitWeekday inUnit:NSCalendarUnitMonth forDate:date].length;
+    return [self.calendar rangeOfUnit:NSCalendarUnitWeekOfMonth inUnit:NSCalendarUnitMonth forDate:date].length;
 }
 
 - (NSDate *)nextDay:(NSDate *)date {
@@ -656,6 +787,18 @@
     UIGraphicsEndImageContext();
     
     return coloredImg;
+}
+
+- (NSString *)dateStringFromDate:(NSDate *)date
+{
+    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    cal.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyyMMdd";
+    formatter.locale = cal.locale;
+    formatter.calendar = cal;
+    NSString *s = [formatter stringFromDate:date];
+    return s;
 }
 
 @end
