@@ -72,6 +72,7 @@
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSCalendar *calendar;
+@property (nonatomic, assign) BOOL noData;
 
 @end
 
@@ -242,6 +243,7 @@
     for (NSInteger i = 1; i <= 42; i++) {
         DateButton *dateButton = [DateButton buttonWithType:UIButtonTypeCustom];
         dateButton.calendar = self.calendar;
+        dateButton.noData = NO;
         [dateButton addTarget:self action:@selector(dateButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [dateButtons addObject:dateButton];
     }
@@ -278,20 +280,8 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    if (!self.calendarContainerContainer) {
-        CGRect frame = self.calendarContainer.frame;
-        frame.origin.y = 0;
-        if (frame.size.height == 0) {
-            frame.size.height = 320;
-            frame.size.width = 320;
-        }
-        self.calendarContainerContainer = [[UIView alloc] initWithFrame:frame];
-        self.calendarContainerContainer.backgroundColor = [UIColor clearColor];
-        [self.calendarContainer addSubview:self.calendarContainerContainer];
-    }
-    
     CGFloat containerWidth = self.bounds.size.width - (CALENDAR_MARGIN * 2);
-    self.cellWidth = (containerWidth / 7.0) - CELL_BORDER_WIDTH;
+    self.cellWidth = (containerWidth / 7.0) - 1;
     
     NSInteger numberOfWeeksToShow = 6;
     if (self.adaptHeightToNumberOfWeeksInMonth) {
@@ -313,6 +303,14 @@
     self.calendarContainer.frame = CGRectMake(CALENDAR_MARGIN, CGRectGetMaxY(self.titleLabel.frame), containerWidth, containerHeight);
     self.daysHeader.frame = CGRectMake(0, 0, self.calendarContainer.frame.size.width, DAYS_HEADER_HEIGHT);
     
+    if (!self.calendarContainerContainer) {
+        CGRect frame = self.calendarContainer.frame;
+        frame.origin.y = 0;
+        self.calendarContainerContainer = [[UIView alloc] initWithFrame:frame];
+        self.calendarContainerContainer.backgroundColor = [UIColor clearColor];
+        [self.calendarContainer addSubview:self.calendarContainerContainer];
+    }
+    
     CGRect lastDayFrame = CGRectZero;
     for (UILabel *dayLabel in self.dayOfWeekLabels) {
         dayLabel.frame = CGRectMake(CGRectGetMaxX(lastDayFrame) + CELL_BORDER_WIDTH, lastDayFrame.origin.y, self.cellWidth, self.daysHeader.frame.size.height);
@@ -320,7 +318,6 @@
     }
     
     for (DateButton *dateButton in self.dateButtons) {
-        //dateButton.titleLabel.textColor = _dateTextColor;
         [dateButton removeFromSuperview];
     }
     
@@ -359,6 +356,10 @@
         } else {
             [dateButton setTitleColor:self.dateTextColor forState:UIControlStateNormal];
             dateButton.backgroundColor = [self dateBackgroundColor];
+        }
+        
+        if (dateButton.noData == YES) {
+            [dateButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
         }
         
         dateButton.frame = [self calculateDayCellFrame:date];
@@ -479,7 +480,28 @@
     [self.calendarContainerContainer removeFromSuperview];
     self.calendarContainerContainer = nil;
     for (DateButton *dateButton in self.dateButtons) {
-        dateButton.titleLabel.textColor = _dateTextColor;
+        NSDate *date = dateButton.date;
+        dateButton.noData = NO;
+        if ([self date:dateButton.date isSameDayAsDate:self.selectedDate]) {
+            dateButton.backgroundColor = self.selectedDateBackgroundColor;
+            [dateButton setTitleColor:self.selectedDateTextColor forState:UIControlStateNormal];
+        } else if ([self dateIsToday:dateButton.date]) {
+            [dateButton setTitleColor:self.currentDateTextColor forState:UIControlStateNormal];
+            dateButton.backgroundColor = self.currentDateBackgroundColor;
+        } else if ([date compare:self.minimumDate] == NSOrderedAscending ||
+                   [date compare:self.maximumDate] == NSOrderedDescending) {
+            [dateButton setTitleColor:self.disabledDateTextColor forState:UIControlStateNormal];
+            dateButton.backgroundColor = self.disabledDateBackgroundColor;
+        } else if (self.shouldFillCalendar && [self compareByMonth:date toDate:self.monthShowing] != NSOrderedSame) {
+            [dateButton setTitleColor:self.nonCurrentMonthDateTextColor forState:UIControlStateNormal];
+            dateButton.backgroundColor = [self dateBackgroundColor];
+        } else {
+            [dateButton setTitleColor:self.dateTextColor forState:UIControlStateNormal];
+            dateButton.backgroundColor = [self dateBackgroundColor];
+        }
+        if (dateButton.noData == YES) {
+            [dateButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        }
     }
     if ( [self.delegate respondsToSelector:@selector(calendar:didChangeMonth:)] ) {
         [self.delegate calendar:self didChangeMonth:self.monthShowing];
@@ -494,7 +516,28 @@
     [self.calendarContainerContainer removeFromSuperview];
     self.calendarContainerContainer = nil;
     for (DateButton *dateButton in self.dateButtons) {
-        dateButton.titleLabel.textColor = _dateTextColor;
+        NSDate *date = dateButton.date;
+        dateButton.noData = NO;
+        if ([self date:dateButton.date isSameDayAsDate:self.selectedDate]) {
+            dateButton.backgroundColor = self.selectedDateBackgroundColor;
+            [dateButton setTitleColor:self.selectedDateTextColor forState:UIControlStateNormal];
+        } else if ([self dateIsToday:dateButton.date]) {
+            [dateButton setTitleColor:self.currentDateTextColor forState:UIControlStateNormal];
+            dateButton.backgroundColor = self.currentDateBackgroundColor;
+        } else if ([date compare:self.minimumDate] == NSOrderedAscending ||
+                   [date compare:self.maximumDate] == NSOrderedDescending) {
+            [dateButton setTitleColor:self.disabledDateTextColor forState:UIControlStateNormal];
+            dateButton.backgroundColor = self.disabledDateBackgroundColor;
+        } else if (self.shouldFillCalendar && [self compareByMonth:date toDate:self.monthShowing] != NSOrderedSame) {
+            [dateButton setTitleColor:self.nonCurrentMonthDateTextColor forState:UIControlStateNormal];
+            dateButton.backgroundColor = [self dateBackgroundColor];
+        } else {
+            [dateButton setTitleColor:self.dateTextColor forState:UIControlStateNormal];
+            dateButton.backgroundColor = [self dateBackgroundColor];
+        }
+        if (dateButton.noData == YES) {
+            [dateButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        }
     }
     if ( [self.delegate respondsToSelector:@selector(calendar:didChangeMonth:)] ) {
         [self.delegate calendar:self didChangeMonth:self.monthShowing];
@@ -504,6 +547,9 @@
 - (void)dateButtonPressed:(id)sender {
     DateButton *dateButton = sender;
     NSDate *date = dateButton.date;
+    if (_dailyDates) {
+        return;
+    }
     if (self.minimumDate && [date compare:self.minimumDate] == NSOrderedAscending) {
         return;
     } else if (self.maximumDate && [date compare:self.maximumDate] == NSOrderedDescending) {
@@ -522,18 +568,17 @@
             NSString *dailyDate = dict[KEY_DATE];
             BOOL submit = [dict[KEY_SUBMIT] boolValue];
             BOOL exist = [dict[KEY_EXIST] boolValue];
-            CGRect frame = dateButton.frame;
-            frame.size.width = frame.size.width - 10;
-            frame.size.height = frame.size.height - 10;
-            frame.origin.x = frame.origin.x + 5;
-            frame.origin.y = frame.origin.y + 5;
-            UIView *view = [[UIView alloc] initWithFrame:frame];
-            view.backgroundColor = [UIColor clearColor];
-            view.layer.cornerRadius = frame.size.width / 2;
             if ([dailyDate isEqualToString:theDay]) {
-                
+                CGRect frame = dateButton.frame;
+                frame.size.width = frame.size.width - 10;
+                frame.size.height = frame.size.height - 10;
+                frame.origin.x = frame.origin.x + 5;
+                frame.origin.y = frame.origin.y + 5;
+                UIView *view = [[UIView alloc] initWithFrame:frame];
+                view.backgroundColor = [UIColor clearColor];
+                view.layer.cornerRadius = frame.size.width / 2;
                 if (!exist) {
-                    dateButton.titleLabel.textColor = [UIColor darkGrayColor];
+                    dateButton.noData = YES;
                     CGFloat viewHeight = view.frame.size.height;
                     CAShapeLayer *shapelayer = [CAShapeLayer layer];
                     UIBezierPath *path = [UIBezierPath bezierPath];
@@ -546,13 +591,14 @@
                     shapelayer.strokeStart = 0.0;
                     shapelayer.fillColor = fill.CGColor;
                     shapelayer.strokeColor = [UIColor darkGrayColor].CGColor;
-                    shapelayer.lineWidth = 2.0;
+                    shapelayer.lineWidth = 1.0;
                     shapelayer.lineJoin = kCALineJoinRound;
                     shapelayer.lineDashPattern = @[@5,@5];
                     shapelayer.path = path.CGPath;
                     [view.layer addSublayer:shapelayer];
                     view.backgroundColor = [UIColor clearColor];
                 } else {
+                    dateButton.noData = NO;
                     if (submit) {
                         view.backgroundColor = _submitColor;
                     } else {
